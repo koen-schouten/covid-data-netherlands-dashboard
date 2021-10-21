@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-	<script src="index.js"></script>
+    <div id="svg-map-netherlands"></div>
+
+	  <script src="./common/js/colorRange.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      fetch("https://raw.githubusercontent.com/koen-schouten/dutch-municipalities-map/main/data/dutch_municipalities_map.svg")
+        .then(response => response.text())
+        .then(svg => document.getElementById("svg-map-netherlands").insertAdjacentHTML("afterbegin", svg));
+    });
+    </script>
   </body>
 </html>
