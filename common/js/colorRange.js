@@ -44,7 +44,35 @@ function RGBToHSL(rgb) {
 }
 
 
-
+/**
+ * Converts an HSL color value to an HSL color value.
+ * See https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB for explanation 
+ * @param {{H:Number, S:Number, L:Number}} rgb
+ * @return {{R:Number, R:Number, B:Number}}
+ */
 function HSLToRGB(hsl) {
+    let C = (1 - Math.abs(2 * hsl.L  - 1)) * hsl.S;
+    let H1 = hsl.H / 60;
+    let X = C * (1 - Math.abs(H1 % 2 - 1))
+    
+    let rgb1;
 
+    if(H1 >= 0 && H1 < 1)
+        rgb1 = {R: C ,G: X ,B: 0};
+    if(H1 >= 1 && H1 < 2)
+        rgb1 = {R: X ,G: C ,B: 0};
+    if(H1 >= 2 && H1 < 3)
+        rgb1 = {R: 0 ,G: C ,B: X};
+    if(H1 >= 3 && H1 < 4)
+        rgb1 = {R: 0 ,G: X ,B: C};
+    if(H1 >= 4 && H1 < 5)
+        rgb1 = {R: X ,G: 0 ,B: C};
+    if(H1 >= 5 && H1 < 6)
+        rgb1 = {R: C ,G: 0 ,B: X};
+
+    let m = hsl.L - (C/2);
+
+    return {R: (rgb1.R + m) * 255, 
+           G: (rgb1.G + m) * 255, 
+           B:(rgb1.B + m) * 255}
 }
