@@ -50,16 +50,42 @@ export const COVID19DataMunicipalityPerDay = function () {
         });
     }
 
+    /**
+     * Get the maximum number of total reported on a day
+     * @param {*} callback the callback function that gets executed after fetching the data.
+     */
+    function getMaxTotalReported(callback){
+        _fetchData((data) => {
+            let dataTotalReported = data.map(element => element["Total_reported"]);
+            let maxTotalReported = Math.max(dataTotalReported);
+            callback(maxTotalReported);
+        })
+    }
+
+    /**
+     * Get the maximum number of total deceased on a day
+     * @param {*} callback the callback function that gets executed after fetching the data.
+     */
+    function getMaxTotalDeceased(callback){
+        _fetchData((data) => {
+            let dataDeceased = data.map(element => element["Deceased"]);
+            let maxDeceased = Math.max(dataDeceased);
+            callback(maxDeceased);
+        })
+    }
+
     function getLatestDate(callback){
         _fetchData((data) => {
-        // the data is by default sorted by date.
-        // The latest element should have the latest date
-        let latestDate = data.at(-1)["Date_of_publication"];
-        callback(latestDate);
+            // the data is by default sorted by date.
+            // The latest element should have the latest date
+            let latestDate = data.at(-1)["Date_of_publication"];
+            callback(latestDate);
         })
     }
 
     return {
+        "getMaxTotalDeceased": getMaxTotalDeceased,
+        "getMaxTotalReported": getMaxTotalReported,
         "getLatestDate": getLatestDate,
         "getDataByDate": getDataByDate,
         "getDataByMunicipality": getDataByMunicipality
