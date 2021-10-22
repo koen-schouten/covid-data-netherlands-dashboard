@@ -1,0 +1,5 @@
+#dutch_municipality_map > svg path{
+    stroke: #6E6E6E ;
+    stroke-width: .48 ;
+    stroke-miterlimit: 10;
+}
