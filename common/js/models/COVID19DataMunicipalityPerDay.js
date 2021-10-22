@@ -5,6 +5,7 @@ export const COVID19DataMunicipalityPerDay = function () {
     // variable where the data is stored as cache.
     let data;
 
+
     /**
      * Fetches covid data for every municipality.
      * @param {*} callback 
@@ -16,12 +17,14 @@ export const COVID19DataMunicipalityPerDay = function () {
             fetch(DATA_URL)
                 .then(response => response.json())
                 .then(response => data = response)
+                .then(response => data = response)
                 .then(() => callback(data))
         }
         else {
             callback(data)
         }
     }
+    
 
     /**
      * Fetches covid data for every municipality by date
@@ -47,7 +50,17 @@ export const COVID19DataMunicipalityPerDay = function () {
         });
     }
 
+    function getLatestDate(callback){
+        _fetchData((data) => {
+        // the data is by default sorted by date.
+        // The latest element should have the latest date
+        let latestDate = data.at(-1)["Date_of_publication"];
+        callback(latestDate);
+        })
+    }
+
     return {
+        "getLatestDate": getLatestDate,
         "getDataByDate": getDataByDate,
         "getDataByMunicipality": getDataByMunicipality
     };
