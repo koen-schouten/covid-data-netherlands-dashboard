@@ -51,6 +51,7 @@
                 });
             //Then get all the data by this date.
             }).then(function(date){
+                console.log(date);
                 return new Promise((resolve, reject) => { 
                     COVID19DataMunicipalityPerDay.getDataByDate(date, (data) => {        
                         resolve(data);
@@ -64,15 +65,13 @@
                 let dataTotalReported = data.map(element => element["Total_reported"]);
 
                 let maxValue = Math.max(...dataTotalReported);
-                let minValue = Math.min(...dataTotalReported);
+                let minValue = 0;
 
                 let colorMap = colorRange({R:0, G:255, B:0}, {R:255, G:0, B:0}, minValue, maxValue, 10);
 
 
-                Array.from(svgElement.getElementsByTagName("path")).forEach(childNode => {
+                Array.from(svgElement.querySelectorAll("path, polygon")).forEach(childNode => {
                     let municipalityCode = childNode.getAttribute("data-municipality-code");
-
-
                     let dataItem = data.find(element => element["Municipality_code"] == municipalityCode);
 
                     if(dataItem){
