@@ -53,7 +53,7 @@ function colorRange(startColor, endColor, startValue, endValue, colorCount){
      * @param {{R:Number, G:Number, B:Number}} rgb
      * @return {{H:Number, S:Number, L:Number}}
      */
-    RGBToHSL = function(rgb) {
+    function RGBToHSL(rgb) {
         //normalize rgb so that R,G,B ∈ [0,1]
         rgb = { R: rgb.R / 255, G: rgb.G / 255, B: rgb.B / 255 }
 
@@ -139,9 +139,9 @@ function colorRange(startColor, endColor, startValue, endValue, colorCount){
      * @return {Array.<Number>}
      */
     function generateEvenDistribution(startVal, endVal, count){
-        stepSize = (endVal - startVal) / (count - 1);
+        let stepSize = (endVal - startVal) / (count - 1);
 
-        values = [];
+        let values = [];
 
         for(let i = 0; i < count; i++){
             values[i] = startVal + i * stepSize
@@ -196,3 +196,5 @@ function colorRange(startColor, endColor, startValue, endValue, colorCount){
         }
     }
 }
+
+export {componentToHex, rgbToHex, colorRange}
