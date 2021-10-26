@@ -3,18 +3,6 @@ import { SVGMapOfDutchMunicipalities } from "/common/js/models/SVGMapOfDutchMuni
 import { componentToHex, rgbToHex, colorRange } from "/common/js/utils/colorRange.js";
 
 window.addEventListener('DOMContentLoaded', (event) => {
-
-    console.log('DOM fully loaded and parsed');
-
-    //let date = "2020-02-28";
-    //
-    let municipality = "GM0014";
-
-    //COVID19DataMunicipalityPerDay.getDataByMunicipality(municipality, data => console.log(data));
-    //COVID19DataMunicipalityPerDay.getDataByDate(date, (data) => {console.log(data)});
-    //SVGMapOfDutchMunicipalities.getMap((svg)=> document.body.insertAdjacentHTML("afterbegin", svg))
-
-
     let getMapPromise = SVGMapOfDutchMunicipalities.getMap();
     let getCOVID19DataMunicipalityPerDayPromise = COVID19DataMunicipalityPerDay.getDataByLatestDate();
 
@@ -29,10 +17,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         //Get the svg element from the HTML tree
         let svgElement = mapContainerElement.childNodes[0];
-        let dataTotalReported = covidMunicipalityData.map(element => element["Total_reported"]);
+        //Calculate per capita data
+        //Added "|| 0" to the end to convert NaN to 0
+        let dataTotalReportedPerCapita = covidMunicipalityData.map(element => (element["Total_reported"]/element["population"] || 0 ));
 
         //Get the data range to determine the colors for the map
-        let maxValue = Math.max(...dataTotalReported);
+        let maxValue = Math.max(...dataTotalReportedPerCapita);
         let minValue = 0;
         let colorMap = colorRange({ R: 0, G: 255, B: 0 }, { R: 255, G: 0, B: 0 }, minValue, maxValue, 10);
 
@@ -43,7 +33,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             let dataItem = covidMunicipalityData.find(element => element["Municipality_code"] == municipalityCode);
 
             if (dataItem) {
-                childNode.setAttribute("fill", rgbToHex(colorMap(dataItem["Total_reported"])));
+                childNode.setAttribute("fill", rgbToHex(colorMap(dataItem["Total_reported"] / dataItem["population"] || 0 )));
                 childNode.setAttribute("data-total-reported", dataItem["Total_reported"]);
             }
 
