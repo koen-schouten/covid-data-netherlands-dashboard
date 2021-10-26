@@ -78,6 +78,7 @@ export const COVID19DataMunicipalityPerDay = function () {
     }
 
     return {
+        "getDataByLatestDate" : getDataByLatestDate,
         "getMaxTotalDeceased": getMaxTotalDeceased,
         "getMaxTotalReported": getMaxTotalReported,
         "getLatestDate": getLatestDate,
