@@ -68,6 +68,15 @@ export const COVID19DataMunicipalityPerDay = function () {
         return latestDate
     }
 
+    /**
+     * Gets all the data for the latest date
+     */
+    async function getDataByLatestDate(){
+        let latestDate = await getLatestDate();
+        let data = await getDataByDate(latestDate);
+        return data;
+    }
+
     return {
         "getMaxTotalDeceased": getMaxTotalDeceased,
         "getMaxTotalReported": getMaxTotalReported,
