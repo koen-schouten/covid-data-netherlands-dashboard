@@ -30,10 +30,11 @@ export const COVID19DataMunicipalityPerDay = function () {
             let response = await fetch(MUNICIPALITY_POPULATION_DATA_URL);
             let populationData = await response.json();
             //convert data array to hashmap for easy access
-            let hashmap = Map();
-            data.forEach(dateElement => {
+            let hashmap = new Map();
+            populationData.forEach(dateElement => {
                 hashmap.set(dateElement.Municipality_code, dateElement.population)
             });
+
             municipality_population_data = hashmap;
             return municipality_population_data;
         }else{
@@ -51,13 +52,13 @@ export const COVID19DataMunicipalityPerDay = function () {
      * @returns {[{"Date_of_publication": STRING, 
      *           "Municipality_code": STRING, 
      *           "Total_reported": NUMNBER, 
-     *           "Deceased": NUMNBER},
-     *           "Population" 
+     *           "Deceased": NUMNBER,
+     *           "Population" :NUMNBER},
      *          ...]]} covidData arrayy with population added
      */
-    function addPopulationData(covidData){
+    async function addPopulationData(covidData){
         let populationData = await _fetchMunicipalityPopulationData();
-        covidData.map(x =>{ x['population'] = populationData[x.Municipality_code]
+        covidData.map(x =>{ x['population'] = populationData.get(x.Municipality_code);
         })
         return covidData
     }
@@ -69,7 +70,7 @@ export const COVID19DataMunicipalityPerDay = function () {
     async function getDataByDate(date) {
         let covidData = await _fetchMunicipalityCovidData();
         covidData = covidData.filter(element => element["Date_of_publication"] == date);
-        return addPopulationData(covidData);
+        return await addPopulationData(covidData);
     }
     
 
@@ -80,7 +81,7 @@ export const COVID19DataMunicipalityPerDay = function () {
     async function getDataByMunicipality(municipalityCode, callback) {
         let data = await _fetchMunicipalityCovidData();
         data = data.filter((element) => element["Municipality_code"] == municipalityCode);
-        return addPopulationData(data);
+        return await addPopulationData(data);
     }
 
     /**
@@ -115,7 +116,7 @@ export const COVID19DataMunicipalityPerDay = function () {
     async function getDataByLatestDate(){
         let latestDate = await getLatestDate();
         let data = await getDataByDate(latestDate);
-        return addPopulationData(data);
+        return await addPopulationData(data);
     }
 
     return {
