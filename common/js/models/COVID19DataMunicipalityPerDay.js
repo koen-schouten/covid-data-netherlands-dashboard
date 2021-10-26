@@ -8,20 +8,16 @@ export const COVID19DataMunicipalityPerDay = function () {
 
     /**
      * Fetches covid data for every municipality.
-     * @param {*} callback 
      */
-    function _fetchData(callback) {
+    async function _fetchData() {
         //If data hasn't been set, fetch the data from URL.
         //Else just use the data that has already been set.
-        if (!data) {
-            fetch(DATA_URL)
-                .then(response => response.json())
-                .then(response => data = response)
-                .then(response => data = response)
-                .then(() => callback(data))
-        }
-        else {
-            callback(data)
+        if(!data){
+            let response = await fetch(DATA_URL);
+            data = await response.json();
+            return data;
+        }else{
+            return data;
         }
     }
     
@@ -29,58 +25,47 @@ export const COVID19DataMunicipalityPerDay = function () {
     /**
      * Fetches covid data for every municipality by date
      * @param {String} date a string representing a data. format: "YYYY-MM-DD" 
-     * @param {*} callback the callback function that gets executed after fetching the data.
      */
-    function getDataByDate(date, callback) {
-        _fetchData((data) => {
-            data = data.filter(element => element["Date_of_publication"] == date);
-            callback(data);
-        })
+    async function getDataByDate(date) {
+        let data = await _fetchData();
+        data = data.filter(element => element["Date_of_publication"] == date);
+        return data;
     }
 
     /**
     * Fetches covid data for every municipality by municipalitycode
     * @param {String} date a string representing a municipality code. format: "GM0014" 
-    * @param {*} callback the callback function that gets executed after fetching the data.
     */
-    function getDataByMunicipality(municipalityCode, callback) {
-        _fetchData((data) => {
-            data = data.filter((element) => element["Municipality_code"] == municipalityCode);
-            callback(data);
-        });
+    async function getDataByMunicipality(municipalityCode, callback) {
+        let data = await _fetchData();
+        data = data.filter((element) => element["Municipality_code"] == municipalityCode);
+        return data;
     }
 
     /**
      * Get the maximum number of total reported on a day
-     * @param {*} callback the callback function that gets executed after fetching the data.
      */
-    function getMaxTotalReported(callback){
-        _fetchData((data) => {
-            let dataTotalReported = data.map(element => element["Total_reported"]);
-            let maxTotalReported = Math.max(dataTotalReported);
-            callback(maxTotalReported);
-        })
+    async function getMaxTotalReported(){
+        let data = await _fetchData();
+        let dataTotalReported = data.map(element => element["Total_reported"]);
+        let maxTotalReported = Math.max(dataTotalReported);
+        return maxTotalReported
     }
 
     /**
      * Get the maximum number of total deceased on a day
-     * @param {*} callback the callback function that gets executed after fetching the data.
      */
-    function getMaxTotalDeceased(callback){
-        _fetchData((data) => {
-            let dataDeceased = data.map(element => element["Deceased"]);
-            let maxDeceased = Math.max(dataDeceased);
-            callback(maxDeceased);
-        })
+    async function getMaxTotalDeceased(){
+        let data = await _fetchData();
+        let dataDeceased = data.map(element => element["Deceased"]);
+        let maxDeceased = Math.max(dataDeceased);
+        return maxDeceased
     }
 
-    function getLatestDate(callback){
-        _fetchData((data) => {
-            // the data is by default sorted by date.
-            // The latest element should have the latest date
-            let latestDate = data.at(-1)["Date_of_publication"];
-            callback(latestDate);
-        })
+    async function getLatestDate(){
+        let data = await _fetchData();
+        let latestDate = data.at(-1)["Date_of_publication"];
+        return latestDate
     }
 
     return {
