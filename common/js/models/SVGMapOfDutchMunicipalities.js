@@ -6,28 +6,21 @@ export const SVGMapOfDutchMunicipalities = function () {
 
     /**
      * Fetches dutch municipalityMap.
-     * @param {*} callback 
      */
-    function _fetchMap(callback) {
+    async function _fetchMap() {
         if (!mapSVG) {
-            fetch(DATA_URL)
-                .then(response => response.text())
-                .then(svg => mapSVG = svg)
-                .then(() => callback(mapSVG));
-        } else {
-            callback(mapSVG)
+            let response = await fetch(DATA_URL);
+            mapSVG = await response.text();
         }
-
+        return mapSVG;
     }
 
     /**
      * Fetches dutch municipalityMap as SVG.
      * @param {*} callback 
      */
-    function getMap(callback) {
-        _fetchMap((mapSVG) => {
-            callback(mapSVG);
-        })
+     async function getMap() {
+        return await _fetchMap();
     }
 
     return { "getMap": getMap };
