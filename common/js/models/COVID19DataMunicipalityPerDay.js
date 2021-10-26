@@ -32,9 +32,9 @@ export const COVID19DataMunicipalityPerDay = function () {
             //convert data array to hashmap for easy access
             let hashmap = new Map();
             populationData.forEach(dateElement => {
-                hashmap.set(dateElement.Municipality_code, dateElement.population)
+                let population = parseInt(dateElement.population)
+                hashmap.set(dateElement.Municipality_code, population)
             });
-
             municipality_population_data = hashmap;
             return municipality_population_data;
         }else{
