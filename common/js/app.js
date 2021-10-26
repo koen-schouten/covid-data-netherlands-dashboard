@@ -1,6 +1,6 @@
-import { COVID19DataMunicipalityPerDay } from "/common/js/models/COVID19DataMunicipalityPerDay.js";
-import { SVGMapOfDutchMunicipalities } from "/common/js/models/SVGMapOfDutchMunicipalities.js";
-import { componentToHex, rgbToHex, colorRange } from "/common/js/utils/colorRange.js";
+import { COVID19DataMunicipalityPerDay } from "./models/COVID19DataMunicipalityPerDay.js";
+import { SVGMapOfDutchMunicipalities } from "./models/SVGMapOfDutchMunicipalities.js";
+import { componentToHex, rgbToHex, colorRange } from "./utils/colorRange.js";
 
 window.addEventListener('DOMContentLoaded', (event) => {
     let getMapPromise = SVGMapOfDutchMunicipalities.getMap();
