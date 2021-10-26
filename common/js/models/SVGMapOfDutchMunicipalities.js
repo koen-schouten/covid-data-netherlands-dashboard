@@ -17,7 +17,6 @@ export const SVGMapOfDutchMunicipalities = function () {
 
     /**
      * Fetches dutch municipalityMap as SVG.
-     * @param {*} callback 
      */
      async function getMap() {
         return await _fetchMap();
