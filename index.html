@@ -35,44 +35,32 @@
             //SVGMapOfDutchMunicipalities.getMap((svg)=> document.body.insertAdjacentHTML("afterbegin", svg))
 
 
-            //First get the map
-            let getMapPromise = new Promise((resolve, reject) => {
-                SVGMapOfDutchMunicipalities.getMap((svg) => {
-                    let mapContainerElement = document.getElementById("dutch_municipality_map");
-                    mapContainerElement.insertAdjacentHTML("afterbegin", svg);
-                    resolve()
-                });
-            //Then get the lastest date
-            }).then(function(result){
-                return new Promise((resolve, reject) => { 
-                    COVID19DataMunicipalityPerDay.getLatestDate((date)=>{
-                        resolve(date)
-                    });
-                });
-            //Then get all the data by this date.
-            }).then(function(date){
-                console.log(date);
-                return new Promise((resolve, reject) => { 
-                    COVID19DataMunicipalityPerDay.getDataByDate(date, (data) => {        
-                        resolve(data);
-                    }); 
-                });
-            //Then color the map
-            }).then(function(data){
+            let getMapPromise =  SVGMapOfDutchMunicipalities.getMap();
+            let getCOVID19DataMunicipalityPerDayPromise = COVID19DataMunicipalityPerDay.getDataByLatestDate();
+
+            Promise.all([getMapPromise, getCOVID19DataMunicipalityPerDayPromise]).then((vals)=>{
+                //Getting the return values from the promises
+                let mapSVG = vals[0];
+                let covidMunicipalityData = vals[1];
+
+                //Insert the svgMap into the page html
                 let mapContainerElement = document.getElementById("dutch_municipality_map");
+                mapContainerElement.insertAdjacentHTML("afterbegin", mapSVG);
+
+                //Get the svg element from the HTML tree
                 let svgElement = mapContainerElement.childNodes[0];
+                let dataTotalReported = covidMunicipalityData.map(element => element["Total_reported"]);
 
-                let dataTotalReported = data.map(element => element["Total_reported"]);
-
+                //Get the data range to determine the colors for the map
                 let maxValue = Math.max(...dataTotalReported);
                 let minValue = 0;
-
                 let colorMap = colorRange({R:0, G:255, B:0}, {R:255, G:0, B:0}, minValue, maxValue, 10);
 
 
+                //Color the elements in the svg map
                 Array.from(svgElement.querySelectorAll("path, polygon")).forEach(childNode => {
                     let municipalityCode = childNode.getAttribute("data-municipality-code");
-                    let dataItem = data.find(element => element["Municipality_code"] == municipalityCode);
+                    let dataItem = covidMunicipalityData.find(element => element["Municipality_code"] == municipalityCode);
 
                     if(dataItem){
                         childNode.setAttribute("fill", rgbToHex(colorMap(dataItem["Total_reported"])));
@@ -80,9 +68,7 @@
                     }
 
                 })
-
-
-            });
+            })
         });
 
     </script>
